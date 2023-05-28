@@ -43,6 +43,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Date;
 import java.text.ParseException;
+import java.time.LocalDate;
+
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
 import java.awt.event.HierarchyListener;
@@ -63,7 +65,8 @@ public class GUI_Bills extends JFrame {
 	private JRadioButton radioBtnMonth;
 	private JRadioButton radioBtnYear;
 	
-	private MaskFormatter mfDay = null, mfMonth = null, mfMonthYear = null, mfYear = null;
+	private MaskFormatter mf = null;
+	private LocalDate today = LocalDate.now();
 
 	private DefaultTableModel dtm = new DefaultTableModel();
 	private Vector tbHeader = new Vector();
@@ -92,125 +95,221 @@ public class GUI_Bills extends JFrame {
 		});
 	}
 	
-	public void clearInfor() {
-//		txtIDBill.setText(null);
-//		txtIDCustomer.setText(null);
-//		txtIDBook.setText(null);
-//		txtDate.setText(null);
-//		txtAmount.setText(null);
-//		txtTotal.setText(null);
+	public void showErrorMessage(String message, String err) {
+	    JOptionPane.showMessageDialog(this, message, err, JOptionPane.ERROR_MESSAGE);
 	}
 	
-//	public void getAllBills() {
-//		tbContent = new Vector();
-//		lsbill = pb.getListBills();
-//		for (int i=0; i<lsbill.size(); i++) {
-//			Bill b = lsbill.get(i);
-//			Vector tbRow = new Vector();
-//			tbRow.add(i+1);
-//			tbRow.add(b.getID());
-//			tbRow.add(b.getIDCustomer());
-//			tbRow.add(b.getIDBook());
-//			tbRow.add(pc.getCustomerByID(b.getIDCustomer()).getName());
-//			tbRow.add(pbook.getBookByID(b.getIDBook()).getTitle());
-//			tbRow.add(b.getDate());
-//			tbRow.add(b.getAmount());
-//			tbRow.add(b.getTotal());
-//			tbContent.add(tbRow);
-//		}
-//		dtm.setDataVector(tbContent, tbHeader);
-//		tbBills.setModel(dtm);
-//	}
-	
-	public void updateBill(int IDBill, String IDCustomer, String IDBook, Date date, int Amount) {
-		Book b = pbook.getBookByID(IDBook);
-//		if (Amount > (billChoose.getAmount() + b.getAmount())) {
-//			lbCheckBill.setText("There are not enough books.");
-//			lbCheckBill.setForeground(Color.red);
-//		}
-//		else {
-//			if (pb.updateBill(IDBill, IDCustomer, IDBook, date, Amount, b.getPrice()*Amount)) {
-//				pbook.updateAmountOfBook(IDBook, billChoose.getAmount()+b.getAmount()-Amount);
-//				lbCheckBill.setText("Updated successfully.");
-//				lbCheckBill.setForeground(Color.blue);
-// 				getAllBills();
-//				clearInfor();
-//			}
-//		}
+	public void showSuccessMessage(String message, String suc) {
+	    JOptionPane.showMessageDialog(this, message, suc, JOptionPane.INFORMATION_MESSAGE);
 	}
 	
-//	public void deleteBill(int IDBill, String IDBook) {
-//		boolean checkDelete = pb.deleteBill(IDBill, IDBook);
-//		if (checkDelete) {
-//			lbCheckBill.setText("Deleted bill successfully.");
-//			lbCheckBill.setForeground(Color.blue);
-//			clearInfor();
-//			getAllBills();
-//		}
-//		else {
-//			lbCheckBill.setText("Please select a bill from table that you want to delete.");
-//			lbCheckBill.setForeground(Color.red);
-//		}
-//	}
-	
-//	public void getAllBillsBy(ArrayList<Bill> lsbill) {
-//		tbContent = new Vector();
-//		for (int i=0; i<lsbill.size(); i++) {
-//			Bill b = lsbill.get(i);
-//			Vector tbRow = new Vector();
-//			tbRow.add(i+1);
-//			tbRow.add(b.getID());
-//			tbRow.add(b.getIDCustomer());
-//			tbRow.add(b.getIDBook());
-//			tbRow.add(pc.getCustomerByID(b.getIDCustomer()).getName());
-//			tbRow.add(pbook.getBookByID(b.getIDBook()).getTitle());
-//			tbRow.add(b.getDate());
-//			tbRow.add(b.getAmount());
-//			tbRow.add(b.getTotal());
-//			tbContent.add(tbRow);
-//		}
-//		dtm.setDataVector(tbContent, tbHeader);
-//		tbBills.setModel(dtm);
-//	}
-	
-//	public void searchByIDAndDate() {
-//		int IDBill = -1;
-//		try {
-//			IDBill = Integer.parseInt(txtIDSearch.getText());
-//		} catch (Exception ex) {}
-//		if (IDBill == -1) {
-//			lbCheckSearch.setText("Invalid ID.");
-//			lbCheckSearch.setForeground(Color.red);
-//		}
-//		else {
-//			try {
-//				lbCheckSearch.setText(null);
-//				ArrayList<Bill> lsbill = radioBtnDay.isSelected() ? pb.getBillsByIDAndDay(IDBill, Date.valueOf(txtDateSearch.getText()))
-//						: radioBtnMonth.isSelected() && radioBtnYear.isSelected() ? pb.getBillsByIDAndMonthYear(IDBill, txtDateSearch.getText())
-//								: radioBtnMonth.isSelected() && !radioBtnYear.isSelected() ? pb.getBillsByIDAndMonth(IDBill, txtDateSearch.getText())
-//										: !radioBtnMonth.isSelected() && radioBtnYear.isSelected() ? pb.getBillsByIDAndYear(IDBill, txtDateSearch.getText())
-//												: pb.getListBillsByID(IDBill);
-//				getAllBillsBy(lsbill);
-//			} catch(Exception ex) {
-//				lbCheckSearch.setText("Invalid date input.");
-//				lbCheckSearch.setForeground(Color.red);
-//			}
-//		}
-//	}
-	
-	public void searchByDate() {
-		try {
-			lbCheckSearch.setText(null);
-			ArrayList<Bill> lsbill = radioBtnDay.isSelected() ? pb.getBillsByDay(Date.valueOf(txtDateSearch.getText()))
-					: radioBtnMonth.isSelected() && radioBtnYear.isSelected() ? pb.getBillsByMonthYear(txtDateSearch.getText())
-							: radioBtnMonth.isSelected() && !radioBtnYear.isSelected() ? pb.getBillsByMonth(txtDateSearch.getText())
-									: !radioBtnMonth.isSelected() && radioBtnYear.isSelected() ? pb.getBillsByYear(txtDateSearch.getText())
-											: pb.getListBills();
-//			getAllBillsBy(lsbill);
-		} catch(Exception ex) {
-			lbCheckSearch.setText("Invalid date input.");
-			lbCheckSearch.setForeground(Color.red);
+	public void checkDate(String date) throws Exception {
+		int y = Integer.parseInt(date.split("-")[0]);
+		int m = Integer.parseInt(date.split("-")[1]);
+		int d = Integer.parseInt(date.split("-")[2]);
+		
+		if (m < 1 || m > 12 || d < 1 || d > 31) {
+			txtDateSearch.setValue(null);
+			if (m < 1 || m > 12) throw new Exception("Invalid month.");
+			if (d < 1 || d > 31) throw new Exception("Invalid day.");
 		}
+		else {
+			int maxDay;
+			if (m == 4 || m == 6 || m == 9 || m == 11) {
+	            maxDay = 30;
+	        } else if (m == 2) {
+	        	if (y % 4 == 0 && (y % 100 != 0 || y % 400 == 0))
+	        		maxDay = 29;
+	        	else maxDay = 28; 
+	        } else maxDay = 31;
+			
+			if (d > maxDay) { 
+				txtDateSearch.setValue(null);
+				throw new Exception("Invalid day.");
+			}
+		}
+	}
+	
+	public void checkMonth(String date) throws Exception {
+		int m = Integer.parseInt(date);
+		
+		if (m < 1 || m > 12) {
+			txtDateSearch.setValue(null);
+			throw new Exception("Invalid month");
+		}
+	}
+	
+	public void checkDay(String date) throws Exception {
+		int d = Integer.parseInt(date);
+		
+		if (d < 1 || d > 31) {
+			txtDateSearch.setValue(null);
+			throw new Exception("Invalid day");
+		}
+	}
+	
+	public void checkDayMonth(String date) throws Exception {
+		int d = Integer.parseInt(date.split("-")[1]);
+		int m = Integer.parseInt(date.split("-")[0]);
+		
+		if (m < 1 || m > 12) {
+			txtDateSearch.setValue(null);
+			throw new Exception("Invalid month");
+		} 
+		
+		switch(m) {
+			case 4:
+			case 6:
+			case 9:
+			case 11:
+				if (d < 1 || d > 30) {
+					txtDateSearch.setValue(null);
+					throw new Exception("Invalid day");
+				}
+				break;
+			case 2:
+				if (d < 1 || d > 29) {
+					txtDateSearch.setValue(null);
+					throw new Exception("Invalid day");
+				}
+				break;
+			default:
+				if (d < 1 || d > 31) {
+					txtDateSearch.setValue(null);
+					throw new Exception("Invalid day");
+				}
+				break;
+		}
+	}
+	
+	public void getAllBills() {
+		tbContent = new Vector();
+		lsbill = pb.getListBillsToday(Date.valueOf(today));
+		double total = 0;
+		for (int i=0; i<lsbill.size(); i++) {
+			Bill b = lsbill.get(i);
+			Vector tbRow = new Vector();
+			tbRow.add(b.getId());
+			tbRow.add(b.getName());
+			tbRow.add(b.getDate());
+			tbRow.add(b.getAmount());
+			tbRow.add(b.getDiscount() + " %");
+			tbRow.add(b.getTotal() + " $");
+			tbContent.add(tbRow);
+		}
+		dtm.setDataVector(tbContent, tbHeader);
+		tbBills.setModel(dtm);
+	}
+	
+	public void getAllBillsBy(ArrayList<Bill> lsbill) throws Exception {
+		try {
+			if (lsbill.size() == 0)
+				throw new Exception("Can't find any bill.");
+			
+			tbContent = new Vector();
+
+			for (int i = 0; i < lsbill.size(); i++) {
+				Bill b = lsbill.get(i);
+				Vector tbRow = new Vector();
+				tbRow.add(b.getId());
+				tbRow.add(b.getName());
+				tbRow.add(b.getDate());
+				tbRow.add(b.getAmount());
+				tbRow.add(b.getDiscount() + " %");
+				tbRow.add(b.getTotal() + " $");
+				tbContent.add(tbRow);
+			}
+			txtDateSearch.setValue(null);
+			dtm.setDataVector(tbContent, tbHeader);
+			tbBills.setModel(dtm);
+		}
+		catch (Exception ex) {
+			throw new Exception(ex.getMessage());
+		}
+	}
+	
+	public void loadDateField() {
+		try {
+			String y = radioBtnYear.isSelected() ? "####" : null;
+			String m = radioBtnMonth.isSelected() ? "##" : null;
+			String d = radioBtnDay.isSelected() ? "##" : null;
+			
+			ArrayList<String> dateList = new ArrayList<>();
+			if (y != null) 
+			    dateList.add(y);
+			
+			if (m != null) 
+			    dateList.add(m);
+			
+			if (d != null) 
+			    dateList.add(d);
+
+			String[] date = dateList.toArray(new String[0]);
+
+			
+			mf = (!radioBtnYear.isSelected() && !radioBtnMonth.isSelected() && !radioBtnDay.isSelected()) ?
+					new MaskFormatter("####-##-##") : new MaskFormatter(String.join("-", date));
+			mf.setPlaceholderCharacter('#');
+			
+			txtDateSearch = new JFormattedTextField(mf);
+			txtDateSearch.setBounds(441, 161, 156, 20);
+			contentPane.add(txtDateSearch);
+		} catch (ParseException ex) {
+			showErrorMessage(ex.getMessage(), "Error");
+		}
+	}
+	
+	public void searchByDate() throws Exception {	
+		String date = txtDateSearch.getValue().toString();
+		
+		boolean d = radioBtnDay.isSelected();
+		boolean m = radioBtnMonth.isSelected();
+		boolean y = radioBtnYear.isSelected();
+
+		String year = "", month = "", day = "";
+		
+		try {
+			if (d && m && y) {
+				year = date.substring(0, 4);
+			    month = date.substring(5, 7);
+			    day = date.substring(8, 10);
+			    checkDate(txtDateSearch.getValue().toString());
+			}
+			else if (d && m) {
+			    month = date.substring(0, 2);
+			    day = date.substring(3, 5);
+			    checkDayMonth(txtDateSearch.getValue().toString());
+			} else if (d && y) {
+			    year = date.substring(0, 4);
+			    day = date.substring(5, 7);
+			    checkDay(day);
+			} else if (d) {
+			    day = date;
+			    checkDay(day);
+			}
+			else if (m && y) {
+			    year = date.substring(0, 4);
+			    month = date.substring(5, 7);
+			    checkMonth(month);
+			} else if (m) {
+			    month = date;
+			    checkMonth(month);
+			}
+			else if (y) 
+			    year = date;
+			else {
+			    year = date.substring(0, 4);
+			    month = date.substring(5, 7);
+			    day = date.substring(8, 10);
+			    checkDate(txtDateSearch.getValue().toString());
+			}
+		}
+		catch (Exception ex) {
+			throw new Exception(ex.getMessage());
+		}
+						
+		ArrayList<Bill> lsbill = pb.getBillsBy(year, month, day);
+		getAllBillsBy(lsbill);
 	}
 
 	public GUI_Bills() {
@@ -226,21 +325,7 @@ public class GUI_Bills extends JFrame {
 		ImageIcon bookStatisticIcon = imgHelp.getIcon(GUI_Bills.class.getResource("/icons/bookstatistic.png"), 30, 25);
 		ImageIcon homeIcon = imgHelp.getIcon(GUI_Bills.class.getResource("/icons/bookstore.png"), 30, 25);
 		ImageIcon billIcon = imgHelp.getIcon(GUI_Bills.class.getResource("/icons/billsIcon.png"), 60, 55);
-	
-		try {
-			mfDay = new MaskFormatter("####-##-##");
-			mfYear = new MaskFormatter("####");
-			mfMonth = new MaskFormatter("##"); 
-			mfMonthYear = new MaskFormatter("####-##");
-			mfDay.setPlaceholderCharacter('#');
-			mfMonth.setPlaceholderCharacter('#');
-			mfYear.setPlaceholderCharacter('#');
-			mfMonthYear.setPlaceholderCharacter('#');
-		} catch (ParseException e1) {
-			e1.printStackTrace();
-		}
 	     
-		
 //		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 922, 635);
 		contentPane = new JPanel();
@@ -424,12 +509,8 @@ public class GUI_Bills extends JFrame {
 		lblDayMonth.setBounds(277, 162, 137, 20);
 		contentPane.add(lblDayMonth);
 		
-		txtDateSearch = new JFormattedTextField(mfDay);
-		txtDateSearch.setBounds(444, 160, 156, 20);
-		contentPane.add(txtDateSearch);
-		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 235, 886, 114);
+		scrollPane.setBounds(10, 235, 886, 287);
 		contentPane.add(scrollPane);
 		
 		tbBills = new JTable();
@@ -445,16 +526,6 @@ public class GUI_Bills extends JFrame {
 		btnClear.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btnClear.setBounds(617, 129, 89, 25);
 		contentPane.add(btnClear);
-		
-		tbHeader.add("Index");
-		tbHeader.add("ID Bill");
-		tbHeader.add("ID Customer");
-		tbHeader.add("ID Book");
-		tbHeader.add("Customer's name");
-		tbHeader.add("Book's name");
-		tbHeader.add("Date");
-		tbHeader.add("Amount");
-		tbHeader.add("Total");
 		
 		JLabel lblYyyymmddExample = new JLabel("yyyy-mm-dd");
 		lblYyyymmddExample.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -484,20 +555,59 @@ public class GUI_Bills extends JFrame {
 		btnDelete_1.setBounds(401, 544, 89, 30);
 		contentPane.add(btnDelete_1);
 		
-		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(10, 395, 886, 122);
-		contentPane.add(scrollPane_1);
+		tbHeader.add("ID Bill");
+		tbHeader.add("Customer's name");
+		tbHeader.add("Date");
+		tbHeader.add("Amount");
+		tbHeader.add("Discount");
+		tbHeader.add("Total");
 		
-		JLabel lblNewLabel_2_1 = new JLabel("Details:");
-		lblNewLabel_2_1.setFont(new Font("Tahoma", Font.BOLD, 15));
-		lblNewLabel_2_1.setBounds(10, 374, 160, 14);
-		contentPane.add(lblNewLabel_2_1);
+		loadDateField();
+		getAllBills();
 		
 		btnClear.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g1.clearSelection();
+				radioBtnDay.setSelected(false);
+				radioBtnMonth.setSelected(false);
 				radioBtnYear.setSelected(false);
-//				checkBoxID.setSelected(false);
+				getAllBills();
+			}
+		});
+		
+		radioBtnMonth.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				txtDateSearch.setVisible(false);
+				loadDateField();
+			}
+		});
+		
+		radioBtnDay.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				txtDateSearch.setVisible(false);
+				loadDateField();
+			}
+		});
+		
+		radioBtnYear.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				txtDateSearch.setVisible(false);
+				loadDateField();
+			}
+		});
+		
+		btnSearch.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					if (txtDateSearch.getText().toString().indexOf('#') != -1) 
+						throw new Exception("Search field is not full filled.");
+					
+					searchByDate();
+				}
+				catch(Exception ex) {
+					showErrorMessage(ex.getMessage(), "Find fail");
+					getAllBills();
+					txtDateSearch.setValue(null);
+				}
 			}
 		});
 		
@@ -544,54 +654,6 @@ public class GUI_Bills extends JFrame {
 //				    	getAllBills();
 //				    }
 //				}
-//			}
-//		});
-		
-		radioBtnMonth.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent e) {
-				txtDateSearch.setVisible(false);
-				txtDateSearch = radioBtnDay.isSelected() ? new JFormattedTextField(mfDay)
-						: radioBtnMonth.isSelected() && radioBtnYear.isSelected() ? new JFormattedTextField(mfMonthYear)
-								: radioBtnMonth.isSelected() && !radioBtnYear.isSelected() ? new JFormattedTextField(mfMonth)
-										: !radioBtnMonth.isSelected() && radioBtnYear.isSelected() ? new JFormattedTextField(mfYear) 
-												: new JFormattedTextField(mfDay);
-				txtDateSearch.setBounds(395, 154, 156, 20);
-				contentPane.add(txtDateSearch);
-			}
-		});
-		
-		radioBtnDay.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent e) {
-				txtDateSearch.setVisible(false);
-				txtDateSearch = radioBtnDay.isSelected() ? new JFormattedTextField(mfDay)
-						: radioBtnMonth.isSelected() && radioBtnYear.isSelected() ? new JFormattedTextField(mfMonthYear)
-								: radioBtnMonth.isSelected() && !radioBtnYear.isSelected() ? new JFormattedTextField(mfMonth)
-										: !radioBtnMonth.isSelected() && radioBtnYear.isSelected() ? new JFormattedTextField(mfYear) 
-												: new JFormattedTextField(mfDay);
-				txtDateSearch.setBounds(395, 154, 156, 20);
-				contentPane.add(txtDateSearch);
-			}
-		});
-		
-		radioBtnYear.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent e) {
-				txtDateSearch.setVisible(false);
-				txtDateSearch = radioBtnDay.isSelected() ? new JFormattedTextField(mfDay)
-						: radioBtnMonth.isSelected() && radioBtnYear.isSelected() ? new JFormattedTextField(mfMonthYear)
-								: radioBtnMonth.isSelected() && !radioBtnYear.isSelected() ? new JFormattedTextField(mfMonth)
-										: !radioBtnMonth.isSelected() && radioBtnYear.isSelected() ? new JFormattedTextField(mfYear) 
-												: new JFormattedTextField(mfDay);
-				txtDateSearch.setBounds(395, 154, 156, 20);
-				contentPane.add(txtDateSearch);
-			}
-		});
-		
-//		btnSearch.addActionListener(new ActionListener() {
-//			public void actionPerformed(ActionEvent e) {
-//				if (checkBoxID.isSelected()) {
-//					searchByIDAndDate();
-//				}
-//				else searchByDate();
 //			}
 //		});
 		

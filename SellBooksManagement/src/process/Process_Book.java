@@ -243,12 +243,50 @@ private Connection cn;
 		}
 	}
 	
-	public Book getBookByID(int id) {
+	public Book getBookById(int id) {
 		Connection con = getCon();
 		String sql = "select * from viewBooks where id=?";
 		try {
 			PreparedStatement ps = (PreparedStatement) con.prepareStatement(sql);
 			ps.setInt(1, id);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				Book b = new Book();
+				b.setId(rs.getInt("id"));
+				b.setTitle(rs.getString("title"));
+				b.setAuthor(rs.getString("author_name"));
+				b.setCategory(rs.getString("category_name"));
+				b.setPublisher(rs.getString("publisher_name"));
+				b.setImportDay(rs.getDate("import_day"));
+				b.setPrice(rs.getDouble("price"));
+				b.setQuantity(rs.getInt("quantity"));
+				con.close();
+				return b;
+			}
+		} catch (SQLException e) {
+			try {
+				con.close();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			return null;
+		} finally{ 
+			if(con != null)
+				try {
+					con.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+		}
+		return null;
+	}
+	
+	public Book getBookByName(String title) {
+		Connection con = getCon();
+		String sql = "select * from viewBooks where title=?";
+		try {
+			PreparedStatement ps = (PreparedStatement) con.prepareStatement(sql);
+			ps.setString(1, title);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
 				Book b = new Book();

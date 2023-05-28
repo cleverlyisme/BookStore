@@ -156,10 +156,10 @@ LEFT JOIN authors ON books.author_id = authors.id
 LEFT JOIN publishers ON books.publisher_id = publishers.id;
 
 CREATE OR REPLACE VIEW viewBooksStatistic AS SELECT bill_details.book_id AS id, books.title, 
-bills.date, books.quantity, SUM(bill_details.quantity) AS book_sold
+bills.date, books.price, books.quantity, SUM(bill_details.quantity) AS book_sold
 FROM bill_details LEFT JOIN bills ON bill_details.bill_id = bills.id 
 LEFT JOIN books ON bill_details.book_id = books.id
-GROUP BY bill_details.book_id, books.title, bills.date, books.quantity;
+GROUP BY bill_details.book_id, books.title, bills.date, books.quantity, books.price;
 
 CREATE OR REPLACE VIEW viewBillDetails AS SELECT bill_details.*, books.title, 
 books.price, bills.date, (bill_details.quantity * books.price) as total FROM bill_details 

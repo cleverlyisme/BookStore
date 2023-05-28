@@ -183,7 +183,7 @@ public class Process_Customer {
 		}
 	}
 	
-	public Customer getCustomerByID(int id) {
+	public Customer getCustomerById(int id) {
 		Connection con = getCon();
 		String sql = "select * from customers where id=?";
 		try {

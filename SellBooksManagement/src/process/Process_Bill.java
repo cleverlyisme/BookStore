@@ -6,10 +6,13 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class Process_Bill {
 	private static Connection cn;
+	private LocalDate today = LocalDate.now();
 
 	public static Connection getCon() {
 		try {
@@ -35,7 +38,7 @@ public class Process_Bill {
 				b.setName(rs.getString("name"));
 				b.setDate(rs.getDate("date"));
 				b.setAmount(rs.getInt("amount"));
-				b.setTotal(rs.getInt("discount"));
+				b.setDiscount(rs.getInt("discount"));
 				b.setTotal(rs.getDouble("total"));
 				lsbill.add(b);
 			}
@@ -71,7 +74,7 @@ public class Process_Bill {
 				b.setName(rs.getString("name") == null ? "Anonymous" : rs.getString("name"));
 				b.setDate(rs.getDate("date"));
 				b.setAmount(rs.getInt("amount"));
-				b.setTotal(rs.getInt("discount"));
+				b.setDiscount(rs.getInt("discount"));
 				b.setTotal(rs.getDouble("total"));
 				lsbill.add(b);
 			}
@@ -101,7 +104,7 @@ public class Process_Bill {
 				b.setName(rs.getString("name") == null ? "Anonymous" : rs.getString("name"));
 				b.setDate(rs.getDate("date"));
 				b.setAmount(rs.getInt("amount"));
-				b.setTotal(rs.getInt("discount"));
+				b.setDiscount(rs.getInt("discount"));
 				b.setTotal(rs.getDouble("total"));
 				lsbill.add(b);
 			}
@@ -132,7 +135,7 @@ public class Process_Bill {
 				b.setName(rs.getString("name") == null ? "Anonymous" : rs.getString("name"));
 				b.setDate(rs.getDate("date"));
 				b.setAmount(rs.getInt("amount"));
-				b.setTotal(rs.getInt("discount"));
+				b.setDiscount(rs.getInt("discount"));
 				b.setTotal(rs.getDouble("total"));
 				lsbill.add(b);
 			}
@@ -179,7 +182,7 @@ public class Process_Bill {
 //		}
 //		return lsbill;
 //	}
-//	
+	
 //	public Bill getBillByID(int IDBill) {
 //		Connection con = getCon();
 //		String sql = "select * from tbBills where IDBill=?";
@@ -209,31 +212,57 @@ public class Process_Bill {
 //		}
 //		return null;
 //	}
-//	
-//	public boolean insertBill(int IDBill, String IDCus, String IDBook, int amount, double total) {
-//		Connection con = getCon();
-//		String sql = "insert into tbBills value(?, ?, ?, curdate(), ?, ?)";
-//		try {
-//			PreparedStatement ps = (PreparedStatement) con.prepareStatement(sql);
-//			ps.setInt(1, IDBill);
-//			ps.setString(2, IDCus);
-//			ps.setString(3, IDBook);
-//			ps.setInt(4, amount);
-//			ps.setDouble(5, total);
-//			ps.executeUpdate();
-//			return true;
-//		} catch (SQLException e) {
-//			return false;
-//		} finally { 
-//			if(con != null)
-//				try {
-//					con.close();
-//				} catch (SQLException e) {
-//					e.printStackTrace();
-//				}
-//		}
-//	}
-//	
+	
+	public boolean insertBill(Integer customerId, int discount, ArrayList<BillDetail> bd) {
+	    Connection con = getCon();
+	    String sql = "insert into bills(customer_id, date, discount) values(?, curdate(), ?)";
+	    try {
+	        PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+	        if (customerId == null) {
+	            ps.setNull(1, java.sql.Types.INTEGER);
+	        } else {
+	            ps.setInt(1, customerId);
+	        }
+	        ps.setInt(2, discount);
+	        ps.executeUpdate();
+
+	        ResultSet rs = ps.getGeneratedKeys();
+
+	        int billId = -1;
+
+	        if (rs.next()) {
+	            billId = rs.getInt(1);
+	        } else {
+	            return false;
+	        }
+
+	        sql = "insert into bill_details(bill_id, book_id, quantity) values(?, ?, ?)";
+	        ps = con.prepareStatement(sql);
+
+	        for (int i = 0; i < bd.size(); i++) {
+	            BillDetail b = bd.get(i);
+	            ps.setInt(1, billId);
+	            ps.setInt(2, b.getBookId());
+	            ps.setInt(3, b.getAmount());
+	            ps.executeUpdate();
+	        }
+
+	        return true;
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        return false;
+	    } finally {
+	        if (con != null) {
+	            try {
+	                con.close();
+	            } catch (SQLException e) {
+	                e.printStackTrace();
+	            }
+	        }
+	    }
+	}
+
+
 //	public boolean updateBill(int IDBill, String IDCustomer, String IDBook, Date date, int Amount, double Total) {
 //		Connection con = getCon();
 //		String sql = "update tbBills set Date=?, Amount=?, Total=? where IDBill=? and IDBook=? and IDCustomer=?";

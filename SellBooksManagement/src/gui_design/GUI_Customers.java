@@ -361,17 +361,20 @@ public class GUI_Customers extends JFrame {
 						String email = txtEmail.getText();
 						String address = txtAddress.getText();
 						String birth = txtBirth.getText();
+						String pattern = "(?i)^(03|05|07|08).*";
 												
 						if (name.equals("") || phone.equals("") || email.equals("") || address.equals("")) {					
 							errors.add("Input fields can't be blank.");	
-							throw new Exception();
 						}
+						
+						if (name.length() < 3 || name.length() > 25) errors.add("Invalid name's length.");	
 						
 						if (!isValidEmail(email)) errors.add("Invalid email.");
 						
-						if (birth.indexOf('#') != -1) errors.add("Birthday is not full filled.");
+						if (birth.indexOf('#') != -1) errors.add("Invalid birthday.");
 						
-						if (!phone.startsWith("0")) errors.add("Phone must start at 0."); 
+						if (!phone.matches(pattern)) 
+							errors.add("Phone must start at 03, 05, 07, 08, 09."); 
 												
 						try {
 							int checkPhone = Integer.parseInt(phone);
