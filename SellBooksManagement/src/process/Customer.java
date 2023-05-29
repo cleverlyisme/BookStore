@@ -3,7 +3,7 @@ package process;
 import java.sql.Date;
 
 public class Customer {
-	private String name, phone, email, address, rank;
+	private String name, phone, email, rank;
 	private Date birth;
 	private int id = -1, bookPurchased;
 	
@@ -55,14 +55,6 @@ public class Customer {
 		this.email = email;
 	}
 
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
 	public String getPhone() {
 		return phone;
 	}
@@ -71,12 +63,11 @@ public class Customer {
 		this.phone = phone;
 	}
 
-	public Customer(int id, String name, String phone, String email, String address, Date birth, int bookPurchased, String rank) {
+	public Customer(int id, String name, String phone, String email, Date birth, int bookPurchased, String rank) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.email = email;
-		this.address = address;
 		this.phone = phone;
 		this.birth = birth;
 		this.bookPurchased = bookPurchased;

@@ -66,7 +66,6 @@ public class GUI_Pay extends JFrame {
 	private JTextField txtPhone;
 	private JTextField txtName;
 	private JTextField txtEmail;
-	private JTextField txtAddress;
 	private JTextField txtAuthor;
 	private JTextField txtTitle;
 	private JTextField txtPublisher;
@@ -111,11 +110,11 @@ public class GUI_Pay extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-//					GUI_Login l = new GUI_Login();
-//					l.setLocationRelativeTo(null); 
-//					l.setVisible(true);
-					frame.setLocationRelativeTo(null); 
-					frame.setVisible(true);
+					GUI_Login l = new GUI_Login();
+					l.setLocationRelativeTo(null); 
+					l.setVisible(true);
+//					frame.setLocationRelativeTo(null); 
+//					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -131,7 +130,6 @@ public class GUI_Pay extends JFrame {
 		txtPhone.setText(null);
 		txtEmail.setText(null);
 		txtBirthday.setText(null);
-		txtAddress.setText(null);
 		txtIDBook.setText(null);
 		txtTitle.setText(null);
 		txtAuthor.setText(null);
@@ -161,7 +159,6 @@ public class GUI_Pay extends JFrame {
 		txtPhone.setText(null);
 		txtEmail.setText(null);
 		txtBirthday.setText(null);
-		txtAddress.setText(null);
 		txtBookPurchased.setText(null);
 		txtRank.setText(null);
 		btnFetchCus.setText("Fetch");
@@ -264,7 +261,6 @@ public class GUI_Pay extends JFrame {
 				txtEmail.setText(ct.getEmail());
 				txtPhone.setText(ct.getPhone());
 				txtBirthday.setText(""+ct.getBirth());
-				txtAddress.setText(ct.getAddress());
 				txtBookPurchased.setText(""+ct.getBookPurhased());
 				txtRank.setText(ct.getRank());
 				btnFetchCus.setText("Clear");
@@ -486,7 +482,7 @@ public class GUI_Pay extends JFrame {
 				Integer customerId = ct.getId() == -1 ? null : ct.getId();
 				int discount = 0;
 				
-				if (LocalDate.parse(txtBirthday.getText()).equals(today) && !checkAnonymous.isSelected()  && ct.getBookPurhased()> 30) 
+				if (!checkAnonymous.isSelected()  && ct.getBookPurhased()> 30 && LocalDate.parse(txtBirthday.getText()).equals(today)) 
 					discount += 3;
 				
 				if (!checkAnonymous.isSelected()  && ct.getRank().equals("vip")) 
@@ -687,7 +683,7 @@ public class GUI_Pay extends JFrame {
 		JPanel panel_2 = new JPanel();
 		panel_2.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		panel_2.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Customer Information", TitledBorder.CENTER, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		panel_2.setBounds(10, 11, 886, 193);
+		panel_2.setBounds(10, 11, 886, 172);
 		panel_1.add(panel_2);
 		panel_2.setLayout(null);
 		
@@ -744,18 +740,6 @@ public class GUI_Pay extends JFrame {
 		txtEmail.setBounds(108, 125, 189, 20);
 		panel_2.add(txtEmail);
 		
-		JLabel lblAddress = new JLabel("Address");
-		lblAddress.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblAddress.setBounds(50, 157, 52, 14);
-		panel_2.add(lblAddress);
-		
-		txtAddress = new JTextField();
-		txtAddress.setEditable(false);
-		txtAddress.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		txtAddress.setColumns(10);
-		txtAddress.setBounds(108, 156, 189, 20);
-		panel_2.add(txtAddress);
-		
 		JLabel lbCusInfor = new JLabel("");
 		lbCusInfor.setHorizontalAlignment(SwingConstants.CENTER);
 		lbCusInfor.setBounds(360, 65, 163, 106);
@@ -807,7 +791,7 @@ public class GUI_Pay extends JFrame {
 		panel_2_1.setLayout(null);
 		panel_2_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		panel_2_1.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Book Information", TitledBorder.CENTER, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		panel_2_1.setBounds(10, 215, 886, 172);
+		panel_2_1.setBounds(10, 194, 886, 172);
 		panel_1.add(panel_2_1);
 		
 		txtIDBook = new JTextField();
@@ -900,7 +884,7 @@ public class GUI_Pay extends JFrame {
 		JLabel lbBookInfor = new JLabel("");
 		lbBookInfor.setHorizontalTextPosition(SwingConstants.CENTER);
 		lbBookInfor.setHorizontalAlignment(SwingConstants.CENTER);
-		lbBookInfor.setBounds(387, 68, 120, 75);
+		lbBookInfor.setBounds(387, 51, 120, 92);
 		lbBookInfor.setIcon(bookInforIcon);
 		panel_2_1.add(lbBookInfor);
 		
@@ -987,16 +971,18 @@ public class GUI_Pay extends JFrame {
 		            int selectedRow = JTableBill.getSelectedRow();
 		            if (selectedRow >= 0) {
 		                Vector vt = (Vector) tbContent.get(selectedRow);
-		                b = pb.getBookByName((String) vt.get(1));
-		                txtIDBook.setText(""+b.getId());
-		                txtTitle.setText(b.getTitle());
-		                txtAuthor.setText(b.getAuthor());
-		                txtPublisher.setText(b.getPublisher());
-		                txtImport.setText(""+b.getImportDay());
-		                txtPrice.setText(""+b.getPrice());
-						txtRemain.setText(""+b.getQuantity());
-		                txtIDBook.setEditable(false);
-		                btnFetchBook.setText("Clear");
+		                if (vt.get(1) != null) {
+		                	b = pb.getBookByName((String) vt.get(1));
+			                txtIDBook.setText(""+b.getId());
+			                txtTitle.setText(b.getTitle());
+			                txtAuthor.setText(b.getAuthor());
+			                txtPublisher.setText(b.getPublisher());
+			                txtImport.setText(""+b.getImportDay());
+			                txtPrice.setText(""+b.getPrice());
+							txtRemain.setText(""+b.getQuantity());
+			                txtIDBook.setEditable(false);
+			                btnFetchBook.setText("Clear");
+		                }
 		            }
 		        }
 		    }

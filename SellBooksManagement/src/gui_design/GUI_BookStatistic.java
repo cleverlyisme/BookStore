@@ -67,11 +67,11 @@ public class GUI_BookStatistic extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-//					GUI_Login l = new GUI_Login();
-//					l.setLocationRelativeTo(null); 
-//					l.setVisible(true);
-					frame.setLocationRelativeTo(null); 
-					frame.setVisible(true);
+					GUI_Login l = new GUI_Login();
+					l.setLocationRelativeTo(null); 
+					l.setVisible(true);
+//					frame.setLocationRelativeTo(null); 
+//					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -419,6 +419,7 @@ public class GUI_BookStatistic extends JFrame {
 		btnPublishers.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				GUI_Publishers p = new GUI_Publishers();
+				p.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 				p.setLocationRelativeTo(null); 
 				p.setVisible(true);
 			}
@@ -427,6 +428,7 @@ public class GUI_BookStatistic extends JFrame {
 		btnCategories.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				GUI_Categories c = new GUI_Categories();
+				c.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 				c.setLocationRelativeTo(null);
 				c.setVisible(true);
 			}

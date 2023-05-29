@@ -42,7 +42,8 @@ public class GUI_Home extends JFrame {
 	public GUI_Home() {
 		setTitle("Book Store - Home Page");
 		ImageIcon logoutIcon = imgHelp.getIcon(GUI_Home.class.getResource("/icons/logout.png"), 30, 25);
-		ImageIcon statisticIcon = imgHelp.getIcon(GUI_Home.class.getResource("/icons/statistic.png"), 30, 25);
+		ImageIcon statisticIcon = imgHelp.getIcon(GUI_Home.class.getResource("/icons/billstatistic.png"), 30, 25);
+		ImageIcon bookStatisticIcon = imgHelp.getIcon(GUI_Home.class.getResource("/icons/bookstatistic.png"), 30, 25);
 		ImageIcon booksIcon = imgHelp.getIcon(GUI_Home.class.getResource("/icons/books.png"), 30, 25);
 		ImageIcon customersIcon = imgHelp.getIcon(GUI_Home.class.getResource("/icons/customers.png"), 30, 25);
 		ImageIcon billsIcon = imgHelp.getIcon(GUI_Home.class.getResource("/icons/bills.png"), 30, 25);
@@ -66,7 +67,7 @@ public class GUI_Home extends JFrame {
 		btnBills.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnBills.setVerticalTextPosition(SwingConstants.BOTTOM);
 		btnBills.setHorizontalTextPosition(SwingConstants.CENTER);
-		btnBills.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnBills.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btnBills.setFocusable(false);
 		btnBills.setFocusTraversalKeysEnabled(false);
 		btnBills.setFocusPainted(false);
@@ -84,7 +85,7 @@ public class GUI_Home extends JFrame {
 		btnCustomers.setFocusPainted(false);
 		btnCustomers.setVerticalTextPosition(SwingConstants.BOTTOM);
 		btnCustomers.setHorizontalTextPosition(SwingConstants.CENTER);
-		btnCustomers.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnCustomers.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btnCustomers.setBorder(new MatteBorder(0, 0, 1, 1, (Color) Color.LIGHT_GRAY));
 		btnCustomers.setIcon(customersIcon);
 		
@@ -98,12 +99,12 @@ public class GUI_Home extends JFrame {
 		btnBooks.setFocusable(false);
 		btnBooks.setVerticalTextPosition(SwingConstants.BOTTOM);
 		btnBooks.setHorizontalTextPosition(SwingConstants.CENTER);
-		btnBooks.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnBooks.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btnBooks.setBorder(new MatteBorder(0, 0, 1, 1, (Color) Color.LIGHT_GRAY));
 		btnBooks.setIcon(booksIcon);
 		
 		JButton btnBillStatistic = new JButton("Bill Statistic");
-		btnBillStatistic.setBounds(261, 210, 89, 88);
+		btnBillStatistic.setBounds(261, 330, 89, 88);
 		contentPane.add(btnBillStatistic);
 		btnBillStatistic.setContentAreaFilled(false);
 		btnBillStatistic.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -111,7 +112,7 @@ public class GUI_Home extends JFrame {
 		btnBillStatistic.setFocusTraversalKeysEnabled(false);
 		btnBillStatistic.setFocusable(false);
 		btnBillStatistic.setBorder(new MatteBorder(0, 0, 1, 1, (Color) Color.LIGHT_GRAY));
-		btnBillStatistic.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnBillStatistic.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btnBillStatistic.setVerticalTextPosition(SwingConstants.BOTTOM);
 		btnBillStatistic.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnBillStatistic.setIcon(statisticIcon);
@@ -125,7 +126,7 @@ public class GUI_Home extends JFrame {
 		btnLogOut.setFocusTraversalKeysEnabled(false);
 		btnLogOut.setFocusable(false);
 		btnLogOut.setBorder(new MatteBorder(0, 0, 1, 1, (Color) Color.LIGHT_GRAY));
-		btnLogOut.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnLogOut.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btnLogOut.setVerticalTextPosition(SwingConstants.BOTTOM);
 		btnLogOut.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnLogOut.setIcon(logoutIcon);
@@ -135,7 +136,7 @@ public class GUI_Home extends JFrame {
 		btnAuthors.setToolTipText("");
 		btnAuthors.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnAuthors.setVerticalTextPosition(SwingConstants.BOTTOM);
-		btnAuthors.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnAuthors.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btnAuthors.setFocusable(false);
 		btnAuthors.setFocusTraversalKeysEnabled(false);
 		btnAuthors.setFocusPainted(false);
@@ -150,7 +151,7 @@ public class GUI_Home extends JFrame {
 		contentPane.add(btnPayment);
 		btnPayment.setVerticalTextPosition(SwingConstants.BOTTOM);
 		btnPayment.setHorizontalTextPosition(SwingConstants.CENTER);
-		btnPayment.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnPayment.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btnPayment.setFocusable(false);
 		btnPayment.setFocusTraversalKeysEnabled(false);
 		btnPayment.setFocusPainted(false);
@@ -164,7 +165,7 @@ public class GUI_Home extends JFrame {
 		btnCategories.setVerticalTextPosition(SwingConstants.BOTTOM);
 		contentPane.add(btnCategories);
 		btnCategories.setHorizontalTextPosition(SwingConstants.CENTER);
-		btnCategories.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnCategories.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btnCategories.setFocusable(false);
 		btnCategories.setFocusTraversalKeysEnabled(false);
 		btnCategories.setFocusPainted(false);
@@ -178,13 +179,13 @@ public class GUI_Home extends JFrame {
 		btnPublishers.setVerticalTextPosition(SwingConstants.BOTTOM);
 		contentPane.add(btnPublishers);
 		btnPublishers.setHorizontalTextPosition(SwingConstants.CENTER);
-		btnPublishers.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnPublishers.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btnPublishers.setFocusTraversalKeysEnabled(false);
 		btnPublishers.setFocusPainted(false);
 		btnPublishers.setContentAreaFilled(false);
 		btnPublishers.setBorder(new MatteBorder(0, 0, 1, 1, (Color) Color.LIGHT_GRAY));
 		btnPublishers.setIcon(publishersIcon);
-		btnPublishers.setBounds(261, 330, 89, 88);
+		btnPublishers.setBounds(261, 210, 89, 88);
 		
 		JLabel lblBookstore = new JLabel("Bookstore Management");
 		lblBookstore.setHorizontalAlignment(SwingConstants.CENTER);
@@ -200,13 +201,15 @@ public class GUI_Home extends JFrame {
 		contentPane.add(lbLogo);
 		
 		JButton btnBookstatistic = new JButton("Book Statistic");
+		btnBookstatistic.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnBookstatistic.setVerticalTextPosition(SwingConstants.BOTTOM);
 		btnBookstatistic.setHorizontalTextPosition(SwingConstants.CENTER);
-		btnBookstatistic.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnBookstatistic.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btnBookstatistic.setFocusTraversalKeysEnabled(false);
 		btnBookstatistic.setFocusPainted(false);
 		btnBookstatistic.setContentAreaFilled(false);
 		btnBookstatistic.setBorder(new MatteBorder(0, 0, 1, 1, (Color) Color.LIGHT_GRAY));
+		btnBookstatistic.setIcon(bookStatisticIcon);
 		btnBookstatistic.setBounds(386, 330, 89, 88);
 		contentPane.add(btnBookstatistic);
 		
@@ -239,17 +242,17 @@ public class GUI_Home extends JFrame {
 		
 		btnCategories.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				dispose();
-				GUI_Categories sb = new GUI_Categories();
-				sb.setLocationRelativeTo(null); 
-				sb.setVisible(true);
+				GUI_Categories c = new GUI_Categories();
+				c.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				c.setLocationRelativeTo(null); 
+				c.setVisible(true);
 			}
 		});
 		
 		btnPublishers.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				dispose();
 				GUI_Publishers sb = new GUI_Publishers();
+				sb.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 				sb.setLocationRelativeTo(null); 
 				sb.setVisible(true);
 			}
@@ -286,6 +289,15 @@ public class GUI_Home extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				GUI_Books b = new GUI_Books();
 				b.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				b.setLocationRelativeTo(null); 
+				b.setVisible(true);
+			}
+		});
+		
+		btnBookstatistic.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				GUI_BookStatistic b = new GUI_BookStatistic();
 				b.setLocationRelativeTo(null); 
 				b.setVisible(true);
 			}

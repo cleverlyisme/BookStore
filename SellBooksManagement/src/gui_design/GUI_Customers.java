@@ -61,7 +61,6 @@ public class GUI_Customers extends JFrame {
 	private JLabel lbCheck;
 	private JTextField txtEmail;
 	private JTextField txtName;
-	private JTextField txtAddress;
 	private JFormattedTextField txtBirth;
 	
 	private Customer c = new Customer();
@@ -78,11 +77,11 @@ public class GUI_Customers extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-//					GUI_Login l = new GUI_Login();
-//					l.setLocationRelativeTo(null); 
-//					l.setVisible(true);
-					frame.setLocationRelativeTo(null); 
-					frame.setVisible(true);
+					GUI_Login l = new GUI_Login();
+					l.setLocationRelativeTo(null); 
+					l.setVisible(true);
+//					frame.setLocationRelativeTo(null); 
+//					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -102,7 +101,6 @@ public class GUI_Customers extends JFrame {
     	txtName.setText(null);
     	txtPhone.setText(null);
     	txtEmail.setText(null);
-    	txtAddress.setText(null);
     	txtBirth.setText(null);
     	txtFind.setText(null);
 		c = new Customer();
@@ -120,7 +118,6 @@ public class GUI_Customers extends JFrame {
 			tbRow.add(cus.getName());
 			tbRow.add(cus.getPhone());
 			tbRow.add(cus.getEmail());
-			tbRow.add(cus.getAddress());
 			tbRow.add(cus.getBirth());
 			tbRow.add(cus.getBookPurhased());
 			tbRow.add(cus.getRank());
@@ -144,7 +141,6 @@ public class GUI_Customers extends JFrame {
 				tbRow.add(cus.getName());
 				tbRow.add(cus.getPhone());
 				tbRow.add(cus.getEmail());
-				tbRow.add(cus.getAddress());
 				tbRow.add(cus.getBirth());
 				tbRow.add(cus.getBookPurhased());
 				tbRow.add(cus.getRank());
@@ -189,6 +185,34 @@ public class GUI_Customers extends JFrame {
 
         return matcher.matches();
     }
+	
+	public void checkInputValues(String name, String phone, String email, String birth) {
+		String pattern = "(?i)^(03|05|07|08).*";
+		
+		if (name.equals("") || phone.equals("") || email.equals("")) {					
+			errors.add("Input fields can't be blank.");	
+		}
+		
+		if (name.length() < 3 || name.length() > 25) errors.add("Invalid name's length.");	
+		
+		if (!isValidEmail(email)) errors.add("Invalid email.");
+		
+		if (birth.indexOf('#') != -1) errors.add("Invalid birthday.");
+		
+		if (!phone.matches(pattern)) 
+			errors.add("Phone must start at 03, 05, 07, 08, 09."); 
+		
+		try {
+			int checkPhone = Integer.parseInt(phone);
+		}
+		catch (Exception ex) {
+			errors.add("Phone must be numbers.");
+		}
+								
+		if (phone.length() != 10) errors.add("Phone's length must be 10.");
+		
+		checkDate(birth);
+	}
 
 	public GUI_Customers() {
 		setTitle("Customers Management");
@@ -224,29 +248,29 @@ public class GUI_Customers extends JFrame {
 		
 		JButton btnAdd = new JButton("Add");
 		btnAdd.setDefaultCapable(false);
-		btnAdd.setBounds(94, 422, 89, 24);
+		btnAdd.setBounds(94, 391, 89, 24);
 		contentPane.add(btnAdd);
 		btnAdd.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
 		JButton btnUpdate = new JButton("Update");
 		btnUpdate.setDefaultCapable(false);
-		btnUpdate.setBounds(283, 422, 89, 24);
+		btnUpdate.setBounds(283, 391, 89, 24);
 		contentPane.add(btnUpdate);
 		btnUpdate.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
 		JButton btnDelete = new JButton("Delete");
 		btnDelete.setDefaultCapable(false);
-		btnDelete.setBounds(467, 422, 89, 24);
+		btnDelete.setBounds(467, 391, 89, 24);
 		contentPane.add(btnDelete);
 		btnDelete.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
 		JLabel lblPassword = new JLabel("Phone");
-		lblPassword.setBounds(311, 283, 50, 19);
+		lblPassword.setBounds(340, 283, 50, 19);
 		contentPane.add(lblPassword);
 		lblPassword.setFont(new Font("Tahoma", Font.BOLD, 15));
 		
 		txtPhone = new JTextField();
-		txtPhone.setBounds(381, 282, 218, 21);
+		txtPhone.setBounds(410, 282, 172, 21);
 		contentPane.add(txtPhone);
 		txtPhone.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtPhone.setColumns(10);
@@ -279,7 +303,7 @@ public class GUI_Customers extends JFrame {
 		txtEmail = new JTextField();
 		txtEmail.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtEmail.setColumns(10);
-		txtEmail.setBounds(94, 338, 198, 21);
+		txtEmail.setBounds(94, 338, 172, 21);
 		contentPane.add(txtEmail);
 		
 		JLabel lblPassword_1 = new JLabel("Email");
@@ -295,34 +319,22 @@ public class GUI_Customers extends JFrame {
 		txtName = new JTextField();
 		txtName.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtName.setColumns(10);
-		txtName.setBounds(94, 283, 198, 21);
+		txtName.setBounds(94, 283, 172, 21);
 		contentPane.add(txtName);
 		
-		txtAddress = new JTextField();
-		txtAddress.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		txtAddress.setColumns(10);
-		txtAddress.setBounds(381, 338, 218, 21);
-		contentPane.add(txtAddress);
-		
-		JLabel lblAddress = new JLabel("Address");
-		lblAddress.setFont(new Font("Tahoma", Font.BOLD, 15));
-		lblAddress.setBounds(311, 339, 60, 19);
-		contentPane.add(lblAddress);
-		
 		txtBirth = new JFormattedTextField(mf);
-		txtBirth.setBounds(263, 381, 198, 21);
+		txtBirth.setBounds(410, 338, 172, 21);
 		contentPane.add(txtBirth);
 		
 		JLabel lblBirthday = new JLabel("Birthday");
 		lblBirthday.setFont(new Font("Tahoma", Font.BOLD, 15));
-		lblBirthday.setBounds(187, 381, 66, 19);
+		lblBirthday.setBounds(334, 339, 66, 19);
 		contentPane.add(lblBirthday);
 		
 		tbHeader.add("ID");
 		tbHeader.add("Name");
 		tbHeader.add("Phone");
 		tbHeader.add("Email");
-		tbHeader.add("Address");
 		tbHeader.add("Birthday");
 		tbHeader.add("Books Purchased");
 		tbHeader.add("Rank");
@@ -337,10 +349,9 @@ public class GUI_Customers extends JFrame {
 		                txtName.setText(vt.get(1).toString());
 		                txtPhone.setText(vt.get(2).toString());
 		                txtEmail.setText(vt.get(3).toString());
-		                txtAddress.setText(vt.get(4).toString());
-		                txtBirth.setText(vt.get(5).toString());
+		                txtBirth.setText(vt.get(4).toString());
 		                c = new Customer((int) vt.get(0), (String) vt.get(1), (String) vt.get(2), 
-		                        (String) vt.get(3), (String) vt.get(4), (Date) vt.get(5), (int) vt.get(6), (String) vt.get(7));
+		                        (String) vt.get(3), (Date) vt.get(4), (int) vt.get(5), (String) vt.get(6));
 		            }
 		        }
 		    }
@@ -359,39 +370,13 @@ public class GUI_Customers extends JFrame {
 						String name = txtName.getText();
 						String phone = txtPhone.getText();
 						String email = txtEmail.getText();
-						String address = txtAddress.getText();
 						String birth = txtBirth.getText();
-						String pattern = "(?i)^(03|05|07|08).*";
-												
-						if (name.equals("") || phone.equals("") || email.equals("") || address.equals("")) {					
-							errors.add("Input fields can't be blank.");	
-						}
 						
-						if (name.length() < 3 || name.length() > 25) errors.add("Invalid name's length.");	
-						
-						if (!isValidEmail(email)) errors.add("Invalid email.");
-						
-						if (birth.indexOf('#') != -1) errors.add("Invalid birthday.");
-						
-						if (!phone.matches(pattern)) 
-							errors.add("Phone must start at 03, 05, 07, 08, 09."); 
-												
-						try {
-							int checkPhone = Integer.parseInt(phone);
-						}
-						catch (Exception ex) {
-							errors.add("Phone must be numbers.");
-						}
-												
-						if (phone.length() != 10) errors.add("Phone's length must be 10.");
-						
-						checkDate(birth);
-						
-						if (errors.size() > 0) throw new Exception();
+						checkInputValues(name, phone, email, birth);
 						
 						Date birthday = Date.valueOf(birth);
 													
-						pc.insertCustomer(name, phone, email, address, birthday);
+						pc.insertCustomer(name, phone, email, birthday);
 						btnUpdate.setEnabled(true);
 						btnDelete.setEnabled(true);
 						btnAdd.setText("Add");
@@ -414,9 +399,8 @@ public class GUI_Customers extends JFrame {
 					errors = new ArrayList<>();
 				}
 				catch (Exception ex) {
-					int result = JOptionPane.showConfirmDialog(frame,"Add failed. "
-				+String.join("\n", errors)+" Try again?", 
-							"Are you sure?",
+					int result = JOptionPane.showConfirmDialog(frame,ex.getMessage()+" Try again?", 
+							"Added fail",
 				             JOptionPane.YES_NO_OPTION,
 				             JOptionPane.ERROR_MESSAGE);
 				    if(result == JOptionPane.NO_OPTION){
@@ -425,7 +409,6 @@ public class GUI_Customers extends JFrame {
 						btnAdd.setText("Add");
 						clearInforInput();
 				    } else txtBirth.setValue(null);
-					errors = new ArrayList<>();
 				}
 			}
 		});
@@ -441,46 +424,18 @@ public class GUI_Customers extends JFrame {
 					String name = txtName.getText();
 					String phone = txtPhone.getText();
 					String email = txtEmail.getText();
-					String address = txtAddress.getText();
 					String birth = txtBirth.getText();
 					
-					if (name.equals("") || phone.equals("") || email.equals("") || address.equals("")) {					
-						errors.add("Input fields can't be blank.");	
-						throw new Exception();
-					}			
-					
-					if (!isValidEmail(email)) errors.add("Invalid email.");
-					
-					if (birth.indexOf('#') != -1) errors.add("Birthday is not full filled.");
-					
-					if (!phone.startsWith("0")) errors.add("Phone must start at 0"); 
-					
-					try {
-						int checkPhone = Integer.parseInt(phone);
-					}
-					catch (Exception ex) {
-						errors.add("Phone must be numbers.");
-					}
-					
-					if (phone.length() != 10) errors.add("Phone's length must be 10");
-					
-					checkDate(birth);
-					
-					if (errors.size() > 0) throw new Exception();
+					checkInputValues(name, phone, email, birth);
 					
 					Date birthday = Date.valueOf(birth);
 												
-					pc.updateCustomer(c.getId(), name, phone, email, address, birthday);
+					pc.updateCustomer(c.getId(), name, phone, email, birthday);
 					showSuccessMessage("Updated customer successfully", "Success");
 					clearInforInput();
 				}
-				catch (SQLException ex) {
-					showErrorMessage(ex.getMessage(), "Updated fail");
-					errors = new ArrayList<>();
-				}
 				catch (Exception ex) {
-					showErrorMessage(String.join("\n", errors), "Updated fail");
-					errors = new ArrayList<>();
+					showErrorMessage(ex.getMessage(), "Updated fail");
 				}
 			}
 		});

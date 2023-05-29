@@ -28,7 +28,6 @@ CREATE TABLE `customers` (
   `name` varchar(50) NOT NULL,
   `phone` varchar(10) NOT NULL unique,
   `email` varchar(50) NOT NULL unique,
-  `address` varchar(50) NOT NULL,
   `books_purchased` int not null default 0,
   `rank` enum('vip', 'normal') default 'normal',
   `birth` date not null,
@@ -174,7 +173,7 @@ INSERT INTO `users`(`username`, `password`) VALUES ('admin','admin');
 INSERT INTO `categories`(`name`) VALUES ('Detective'), ('Romance'),('Comedy');
 INSERT INTO `publishers`(`name`) VALUES ('Kim Dong'), ('Tuoi Tre'),('Thanh Xuan');
 INSERT INTO `authors`(`name`, `age`) VALUES ('Agatha Christie', 47), ('Arthur Conan Doyle', 35),('Fujiko', 38);
-INSERT INTO `customers`(`name`, `phone`, `email`, `address`, `birth`) VALUES ('Thomas','0337223434','tuananh@gmail.com','VN', '2002-06-28'),('Tom','0989828930','tom@gmail.com','America', '2000-03-13'),('Cleverly','0167496868','tuananhdao28@gmail.com','HN, Canada', '2001-11-28');
+INSERT INTO `customers`(`name`, `phone`, `email`,  `birth`) VALUES ('Thomas','0337223434','tuananh@gmail.com', '2002-06-28'),('Tom','0989828930','tom@gmail.com', '2000-03-13'),('Cleverly','0167496868','tuananhdao28@gmail.com', '2001-11-28');
 INSERT INTO `books`(`title`, `author_id`, `category_id`, `publisher_id`, `import_day`, `price`, `quantity`) 
 VALUES ('Adventures of Sherlock Homles E.1',1,1,1,'2020-10-12',200,10),('Hercules Poirot',2,1,2,'2010-07-28',190,4),('Doraemon E.1', 3, 3, 1,'2012-06-28',150,6);
 INSERT INTO `bills`(`customer_id`, `date`, `discount`) VALUES (2,'2023-05-25', 10), (null, '2023-05-15', 0);

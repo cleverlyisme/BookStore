@@ -95,11 +95,11 @@ public class GUI_Books extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-//					GUI_Login l = new GUI_Login();
-//					l.setLocationRelativeTo(null); 
-//					l.setVisible(true);
-					frame.setLocationRelativeTo(null); 
-					frame.setVisible(true);
+					GUI_Login l = new GUI_Login();
+					l.setLocationRelativeTo(null); 
+					l.setVisible(true);
+//					frame.setLocationRelativeTo(null); 
+//					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -221,6 +221,45 @@ public class GUI_Books extends JFrame {
 		}
 		dtm.setDataVector(tbContent, tbHeader);
 		tbBooks.setModel(dtm);
+	}
+	
+	public void checkInputValues(String title, String author, String category, 
+			String publisher, String importDay, String price, String quantity) {
+//		if (title.equals("") || price.equals("") || quantity.equals("")) {					
+//			errors.add("Input fields can't be blank.");	
+//			throw new Exception();
+//		}
+//		
+//		if (importDay.indexOf('#') != -1) errors.add("Import day is not full filled.");
+//		
+//		double checkPrice=0; int checkQuantity=0;
+//		try {
+//			checkPrice = Double.parseDouble(price);
+//			
+//			if (checkPrice < 0) 
+//				throw new Exception("Price must > 0.");
+//		} 
+//		catch (NumberFormatException ex) {
+//			errors.add("Price must be double type.");
+//		}
+//		catch (Exception ex) {
+//			errors.add(ex.getMessage());
+//		};
+//		
+//		try {
+//			checkQuantity = Integer.parseInt(quantity);
+//			
+//			if (checkQuantity > 100 || checkQuantity < 0) 
+//				throw new Exception("Quantity must > 0 & < 100.");
+//		} 
+//		catch (NumberFormatException ex) {
+//			errors.add("Quantity must be int type.");
+//		}
+//		catch (Exception ex) {
+//			errors.add(ex.getMessage());
+//		};
+//														
+//		checkDate(importDay);
 	}
 
 	public GUI_Books() {
@@ -429,66 +468,31 @@ public class GUI_Books extends JFrame {
 		
 		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {					
+				try {
 					if (btnAdd.getText().equals("Add")) {
 						clearInforInput();
 						btnAdd.setText("Save");
 						btnUpdate.setEnabled(false);
 						btnDelete.setEnabled(false);
-					}
-					else {
+					} else {
 						String title = txtTitle.getText();
 						String author = cbAuthor.getSelectedItem().toString();
 						String category = cbCategory.getSelectedItem().toString();
 						String publisher = cbPublisher.getSelectedItem().toString();
 						String importDay = txtImport.getText();
-						String price = txtPrice.getText();
-						String quantity = txtQuantity.getText();
-						
-						if (title.equals("") || price.equals("") || quantity.equals("")) {					
-							errors.add("Input fields can't be blank.");	
-							throw new Exception();
-						}
-						
-						if (importDay.indexOf('#') != -1) errors.add("Import day is not full filled.");
-						
-						double checkPrice=0; int checkQuantity=0;
-						try {
-							checkPrice = Double.parseDouble(price);
-							
-							if (checkPrice < 0) 
-								throw new Exception("Price must > 0.");
-						} 
-						catch (NumberFormatException ex) {
-							errors.add("Price must be double type.");
-						}
-						catch (Exception ex) {
-							errors.add(ex.getMessage());
-						};
-						
-						try {
-							checkQuantity = Integer.parseInt(quantity);
-							
-							if (checkQuantity > 100 || checkQuantity < 0) 
-								throw new Exception("Quantity must > 0 & < 100.");
-						} 
-						catch (NumberFormatException ex) {
-							errors.add("Quantity must be int type.");
-						}
-						catch (Exception ex) {
-							errors.add(ex.getMessage());
-						};
-																		
-						checkDate(importDay);
-						
-						if (errors.size() > 0) throw new Exception();
+						String priceStr = txtPrice.getText();
+						String quantityStr = txtQuantity.getText();
+
+						checkInputValues(title, author, category, publisher, importDay, priceStr, quantityStr);
 						
 						int categoryId = pc.getCategoryByName(category).getId();
 						int authorId = pa.getAuthorByName(author).getId();
 						int publisherId = pp.getPublisherByName(publisher).getId();
 						Date date = Date.valueOf(importDay);
-													
-						pb.insertBook(title, authorId, categoryId, publisherId, date, checkPrice, checkQuantity);
+						int price = Integer.parseInt(priceStr);
+						int quantity = Integer.parseInt(quantityStr);
+
+						pb.insertBook(title, authorId, categoryId, publisherId, date, price, quantity);
 						btnUpdate.setEnabled(true);
 						btnDelete.setEnabled(true);
 						btnAdd.setText("Add");
@@ -540,53 +544,19 @@ public class GUI_Books extends JFrame {
 					String category = cbCategory.getSelectedItem().toString();
 					String publisher = cbPublisher.getSelectedItem().toString();
 					String importDay = txtImport.getText();
-					String price = txtPrice.getText();
-					String quantity = txtQuantity.getText();
-					
-					if (title.equals("") || price.equals("") || quantity.equals("")) {					
-						errors.add("Input fields can't be blank.");	
-						throw new Exception();
-					}
-					
-					if (importDay.indexOf('#') != -1) errors.add("Import day is not full filled.");
-					
-					double checkPrice=0; int checkQuantity=0;
-					try {
-						checkPrice = Double.parseDouble(price);
-						
-						if (checkPrice < 0) 
-							throw new Exception("Price must > 0.");
-					} 
-					catch (NumberFormatException ex) {
-						errors.add("Price must be double type.");
-					}
-					catch (Exception ex) {
-						errors.add(ex.getMessage());
-					};
-					
-					try {
-						checkQuantity = Integer.parseInt(quantity);
-						
-						if (checkQuantity > 100 || checkQuantity < 0) 
-							throw new Exception("Quantity must > 0 & < 100.");
-					} 
-					catch (NumberFormatException ex) {
-						errors.add("Quantity must be int type.");
-					}
-					catch (Exception ex) {
-						errors.add(ex.getMessage());
-					};
-																	
-					checkDate(importDay);
-					
-					if (errors.size() > 0) throw new Exception();
+					String priceStr = txtPrice.getText();
+					String quantityStr = txtQuantity.getText();
+
+					checkInputValues(title, author, category, publisher, importDay, priceStr, quantityStr);
 					
 					int categoryId = pc.getCategoryByName(category).getId();
 					int authorId = pa.getAuthorByName(author).getId();
 					int publisherId = pp.getPublisherByName(publisher).getId();
 					Date date = Date.valueOf(importDay);
+					int price = Integer.parseInt(priceStr);
+					int quantity = Integer.parseInt(quantityStr);
 												
-					pb.updateBook(bo.getId(), title, authorId, categoryId, publisherId, date, checkPrice, checkQuantity);
+					pb.updateBook(bo.getId(), title, authorId, categoryId, publisherId, date, price, quantity);
 					showSuccessMessage("Updated book successfully", "Success");
 					clearInforInput();
 				}

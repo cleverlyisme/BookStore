@@ -63,11 +63,11 @@ public class GUI_Authors extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-//					GUI_Login l = new GUI_Login();
-//					l.setLocationRelativeTo(null); 
-//					l.setVisible(true);
-					frame.setLocationRelativeTo(null); 
-					frame.setVisible(true);
+					GUI_Login l = new GUI_Login();
+					l.setLocationRelativeTo(null); 
+					l.setVisible(true);
+//					frame.setLocationRelativeTo(null); 
+//					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

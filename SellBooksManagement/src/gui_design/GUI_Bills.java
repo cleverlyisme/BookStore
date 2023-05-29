@@ -46,6 +46,8 @@ import java.text.ParseException;
 import java.time.LocalDate;
 
 import javax.swing.event.ChangeListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ChangeEvent;
 import java.awt.event.HierarchyListener;
 import java.awt.event.HierarchyEvent;
@@ -74,7 +76,7 @@ public class GUI_Bills extends JFrame {
 	private Process_Bill pb = new Process_Bill();
 	private Process_Book pbook = new Process_Book();
 	private Process_Customer pc = new Process_Customer();
-	private Bill billChoose;
+	private Bill billChoose = new Bill();
 	private ArrayList<Bill> lsbill = new ArrayList<>();
 	
 	private static GUI_Bills frame = new GUI_Bills();
@@ -83,11 +85,11 @@ public class GUI_Bills extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-//					GUI_Login l = new GUI_Login();
-//					l.setLocationRelativeTo(null); 
-//					l.setVisible(true);
-					frame.setLocationRelativeTo(null); 
-					frame.setVisible(true);
+					GUI_Login l = new GUI_Login();
+					l.setLocationRelativeTo(null); 
+					l.setVisible(true);
+//					frame.setLocationRelativeTo(null); 
+//					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -453,6 +455,7 @@ public class GUI_Bills extends JFrame {
 		panel.add(btnAuthors);
 		
 		JButton btnCategories = new JButton("Categories");
+		btnCategories.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnCategories.setVerticalTextPosition(SwingConstants.BOTTOM);
 		btnCategories.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnCategories.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -466,6 +469,7 @@ public class GUI_Bills extends JFrame {
 		panel.add(btnCategories);
 		
 		JButton btnBookStatistic = new JButton("Book Statistic");
+		btnBookStatistic.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnBookStatistic.setVerticalTextPosition(SwingConstants.BOTTOM);
 		btnBookStatistic.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnBookStatistic.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -549,11 +553,11 @@ public class GUI_Bills extends JFrame {
 		lbCheckSearch.setBounds(292, 214, 313, 20);
 		contentPane.add(lbCheckSearch);
 		
-		JButton btnDelete_1 = new JButton("Delete");
-		btnDelete_1.setHorizontalTextPosition(SwingConstants.CENTER);
-		btnDelete_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnDelete_1.setBounds(401, 544, 89, 30);
-		contentPane.add(btnDelete_1);
+		JButton btnDelete = new JButton("Delete");
+		btnDelete.setHorizontalTextPosition(SwingConstants.CENTER);
+		btnDelete.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnDelete.setBounds(401, 544, 89, 30);
+		contentPane.add(btnDelete);
 		
 		tbHeader.add("ID Bill");
 		tbHeader.add("Customer's name");
@@ -564,6 +568,18 @@ public class GUI_Bills extends JFrame {
 		
 		loadDateField();
 		getAllBills();
+		
+		tbBills.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+		    public void valueChanged(ListSelectionEvent e) {
+		        if (!e.getValueIsAdjusting()) {
+		            int selectedRow = tbBills.getSelectedRow();
+		            if (selectedRow >= 0) {
+		                Vector vt = (Vector) tbContent.get(selectedRow);
+		                billChoose.setId((int) vt.get(0));
+		            }
+		        }
+		    }
+		});
 		
 		btnClear.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -611,51 +627,32 @@ public class GUI_Bills extends JFrame {
 			}
 		});
 		
-//		btnDelete.addActionListener(new ActionListener() {
-//			public void actionPerformed(ActionEvent e) {
-//				int IDBill = -1;
-//				String IDBook = txtIDBook.getText();
-//				try {
-//					IDBill = Integer.parseInt(txtIDBill.getText());
-//				} catch(Exception ex) {
-//					lbCheckBill.setText("Please select a bill from table that you want to delete.");
-//					lbCheckBill.setForeground(Color.red);
-//				}
-//				if (IDBill != -1) {
-//					int result = JOptionPane.showConfirmDialog(frame,"Delete all bills have ID Bill: "+IDBill+"\nand ID Book:"+IDBook+"?", 
-//							"Are you sure?",
-//				             JOptionPane.YES_NO_OPTION,
-//				             JOptionPane.QUESTION_MESSAGE);
-//				    if(result == JOptionPane.YES_OPTION){
-//				    	deleteBill(IDBill, IDBook);
-//				    }
-//				}
-//			}
-//		});
-		
-//		btnDeleteAllBill.addActionListener(new ActionListener() {
-//			public void actionPerformed(ActionEvent e) {
-//				int IDBill = -1;
-//				try {
-//					IDBill = Integer.parseInt(txtIDBill.getText());
-//				} catch(Exception ex) {
-//					lbCheckBill.setText("Please select a bill from table that you want to update.");
-//					lbCheckBill.setForeground(Color.red);
-//				}
-//				if (IDBill != -1) {
-//					int result = JOptionPane.showConfirmDialog(frame,"Delete all bills have ID: "+IDBill+"?", 
-//							"Are you sure?",
-//				             JOptionPane.YES_NO_OPTION,
-//				             JOptionPane.QUESTION_MESSAGE);
-//				    if(result == JOptionPane.YES_OPTION){
-//				    	pb.deleteAllBillByID(IDBill);
-//				    	lbCheckBill.setText("Deleted successfully.");
-//						lbCheckBill.setForeground(Color.blue);
-//				    	getAllBills();
-//				    }
-//				}
-//			}
-//		});
+		btnDelete.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					if (billChoose.getId() == -1) 
+						throw new Exception("Please choose bill you want to delete.");
+					
+					int result = JOptionPane.showConfirmDialog(frame,"Delete this customer?", 
+							"Are you sure?",
+				             JOptionPane.YES_NO_OPTION,
+				             JOptionPane.QUESTION_MESSAGE);
+				    if(result == JOptionPane.YES_OPTION){
+				    	boolean checkDelete = pb.deleteBill(billChoose.getId());
+						
+						if (!checkDelete) 
+							throw new Error("Something not wrong.");
+						
+						showSuccessMessage("Deleted successfully", "Success");
+						billChoose = new Bill();
+						getAllBills();
+				    }
+				}
+				catch(Exception ex) {
+					showErrorMessage(ex.getMessage(), "Deleted fail");
+				}
+			}
+		});
 		
 		btnHome.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -684,14 +681,6 @@ public class GUI_Bills extends JFrame {
 			}
 		});
 		
-		btnBookStatistic.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				GUI_BookStatistic b = new GUI_BookStatistic();
-				b.setLocationRelativeTo(null);
-				b.setVisible(true);
-			}
-		});
-		
 		btnCustomers.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				GUI_Customers cus = new GUI_Customers();
@@ -710,6 +699,15 @@ public class GUI_Bills extends JFrame {
 			}
 		});
 		
+		btnCategories.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				GUI_Categories c = new GUI_Categories();
+				c.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				c.setLocationRelativeTo(null); 
+				c.setVisible(true);
+			}
+		});
+		
 		btnBillStatistic.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
@@ -719,17 +717,21 @@ public class GUI_Bills extends JFrame {
 			}
 		});
 		
+		btnBookStatistic.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				GUI_BookStatistic c = new GUI_BookStatistic();
+				c.setLocationRelativeTo(null); 
+				c.setVisible(true);
+			}
+		});
+		
 		btnBooks.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				GUI_Books b = new GUI_Books();
 				b.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 				b.setLocationRelativeTo(null); 
 				b.setVisible(true);
-			}
-		});
-		
-		btnSearch.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
 			}
 		});
 	}

@@ -34,7 +34,6 @@ public class Process_Customer {
 				cus.setName(rs.getString("name"));
 				cus.setPhone(rs.getString("phone"));
 				cus.setEmail(rs.getString("email"));
-				cus.setAddress(rs.getString("address"));
 				cus.setBirth(rs.getDate("birth"));
 				cus.setBookPurchased(rs.getInt("books_purchased"));
 				cus.setRank(rs.getString("rank"));
@@ -67,7 +66,6 @@ public class Process_Customer {
 				cus.setName(rs.getString("name"));
 				cus.setPhone(rs.getString("phone"));
 				cus.setEmail(rs.getString("email"));
-				cus.setAddress(rs.getString("address"));
 				cus.setBirth(rs.getDate("birth"));
 				cus.setBookPurchased(rs.getInt("books_purchased"));
 				cus.setRank(rs.getString("rank"));
@@ -86,16 +84,15 @@ public class Process_Customer {
 		return lscus;
 	}
 	
-	public boolean insertCustomer(String name, String phone, String email, String address, Date birth) throws Exception {
+	public boolean insertCustomer(String name, String phone, String email, Date birth) throws Exception {
 		Connection con = getCon();
-		String sql = "insert into customers(name, phone, email, address, birth) values(?, ?, ?, ?, ?)";
+		String sql = "insert into customers(name, phone, email, birth) values(?, ?, ?, ?)";
 		try {
 			PreparedStatement ps = (PreparedStatement) con.prepareStatement(sql);
 			ps.setString(1, name);
 			ps.setString(2, phone);
 			ps.setString(3, email);
-			ps.setString(4, address);
-			ps.setDate(5, birth);
+			ps.setDate(4, birth);
 			ps.executeUpdate();
 			return true;
 		} 
@@ -124,17 +121,16 @@ public class Process_Customer {
 		}
 	}
 	
-	public boolean updateCustomer(int id, String name, String phone, String email, String address, Date birth) throws Exception {
+	public boolean updateCustomer(int id, String name, String phone, String email, Date birth) throws Exception {
 		Connection con = getCon();
-		String sql = "update customers set name=?, phone=?, email=?, address=?, birth=? where id=?";
+		String sql = "update customers set name=?, phone=?, email=?, birth=? where id=?";
 		try {
 			PreparedStatement ps = (PreparedStatement) con.prepareStatement(sql);
 			ps.setString(1, name);
 			ps.setString(2, phone);
 			ps.setString(3, email);
-			ps.setString(4, address);
-			ps.setDate(5, birth);
-			ps.setInt(6, id);
+			ps.setDate(4, birth);
+			ps.setInt(5, id);
 			ps.executeUpdate();
 			return true;
 		} 
@@ -196,7 +192,6 @@ public class Process_Customer {
 				ct.setName(rs.getString("name"));
 				ct.setPhone(rs.getString("phone"));
 				ct.setEmail(rs.getString("email"));
-				ct.setAddress(rs.getString("address"));
 				ct.setBirth(rs.getDate("birth"));
 				ct.setBookPurchased(rs.getInt("books_purchased"));
 				ct.setRank(rs.getString("rank"));
