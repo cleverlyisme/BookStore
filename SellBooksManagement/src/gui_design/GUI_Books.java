@@ -441,7 +441,7 @@ public class GUI_Books extends JFrame {
 		tbHeader.add("Publisher");
 		tbHeader.add("Import day");
 		tbHeader.add("Price");
-		tbHeader.add("Amount");
+		tbHeader.add("Quantity");
 		loadDataComboBox();
 		getListBooks();
 		
@@ -485,12 +485,24 @@ public class GUI_Books extends JFrame {
 
 						checkInputValues(title, author, category, publisher, importDay, priceStr, quantityStr);
 						
+						for (int i=0; i<tbContent.size(); i++) {
+							Vector data = (Vector) tbContent.get(i);
+							if (title.equals((String) data.get(1))) 
+								throw new Exception("Book with title "+title+" already exist.");
+						}
+						
 						int categoryId = pc.getCategoryByName(category).getId();
 						int authorId = pa.getAuthorByName(author).getId();
 						int publisherId = pp.getPublisherByName(publisher).getId();
 						Date date = Date.valueOf(importDay);
 						int price = Integer.parseInt(priceStr);
 						int quantity = Integer.parseInt(quantityStr);
+						
+						if (price <= 0) 
+							throw new Exception("Price must >= 0");
+						
+						if (quantity < 1 || quantity > 100) 
+							throw new Exception("Quantity must > 1 and <= 100");							
 
 						pb.insertBook(title, authorId, categoryId, publisherId, date, price, quantity);
 						btnUpdate.setEnabled(true);
@@ -500,23 +512,8 @@ public class GUI_Books extends JFrame {
 						clearInforInput();
 					}
 				}
-				catch (SQLException ex) {
-					int result = JOptionPane.showConfirmDialog(frame,"Add failed. "
-				+ex.getMessage()+" Try again?", 
-							"Are you sure?",
-				             JOptionPane.YES_NO_OPTION,
-				             JOptionPane.ERROR_MESSAGE);
-				    if(result == JOptionPane.NO_OPTION){
-				    	btnUpdate.setEnabled(true);
-						btnDelete.setEnabled(true);
-						btnAdd.setText("Add");
-						clearInforInput();
-				    }
-					errors = new ArrayList<>();
-				}
 				catch (Exception ex) {
-					int result = JOptionPane.showConfirmDialog(frame,"Add failed. "
-				+String.join("\n", errors)+" Try again?", 
+					int result = JOptionPane.showConfirmDialog(frame,ex.getMessage()+" Try again?", 
 							"Are you sure?",
 				             JOptionPane.YES_NO_OPTION,
 				             JOptionPane.ERROR_MESSAGE);
@@ -526,7 +523,6 @@ public class GUI_Books extends JFrame {
 						btnAdd.setText("Add");
 						clearInforInput();
 				    }
-					errors = new ArrayList<>();
 				}
 			}
 		});
@@ -534,10 +530,8 @@ public class GUI_Books extends JFrame {
 		btnUpdate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					if (bo.getId() == -1) {
-						errors.add("Please select book you want to update");
-						throw new Exception();
-					}
+					if (bo.getId() == -1) 
+						throw new Exception("Please select book you want to update");
 		
 					String title = txtTitle.getText();
 					String author = cbAuthor.getSelectedItem().toString();
@@ -560,13 +554,8 @@ public class GUI_Books extends JFrame {
 					showSuccessMessage("Updated book successfully", "Success");
 					clearInforInput();
 				}
-				catch (SQLException ex) {
-					showErrorMessage(ex.getMessage(), "Updated fail");
-					errors = new ArrayList<>();
-				}
 				catch (Exception ex) {
-					showErrorMessage(String.join("\n", errors), "Updated fail");
-					errors = new ArrayList<>();
+					showErrorMessage(ex.getMessage(), "Updated fail");
 				}
 			}
 		});

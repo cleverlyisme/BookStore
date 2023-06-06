@@ -81,7 +81,7 @@ public class GUI_Pay extends JFrame {
 	private DefaultTableModel dtm = new DefaultTableModel();
 	private Vector tbHeader = new Vector();
 	private Vector tbContent = new Vector();
-	private ArrayList<BillDetail> tbBooksAdded = new ArrayList();
+	public ArrayList<BillDetail> tbBooksAdded = new ArrayList();
 	private ImageIconHelper imgHelp = new ImageIconHelper();
 	private Process_Customer pc = new Process_Customer();
 	private Process_Book pb = new Process_Book();
@@ -89,7 +89,7 @@ public class GUI_Pay extends JFrame {
 	private Book b = new Book();
 	private Book bChoose = new Book();
 	private Process_Bill pbill = new Process_Bill();
-	private int totalAmount = 0;
+	public int totalAmount = 0;
 	private LocalDate today = LocalDate.now();
 	
 	private static GUI_Pay frame = new GUI_Pay();
@@ -311,65 +311,62 @@ public class GUI_Pay extends JFrame {
 		}
 	}
 	
-	public void addToBill() {
-		try {
-			if (!checkAnonymous.isSelected() && ct.getId() == -1) 
+	public void addBookToBillTable(int customerId, int bookId, int amount) {
+		checkAnonymous.setEnabled(false);
+
+		totalAmount += amount;
+
+		double total = b.getPrice() * amount;
+
+		tbBooksAdded.add(new BillDetail(bookId, amount));
+		Vector tbRow = new Vector();
+		tbRow.add(ct.getName() == null ? "Anonymous" : ct.getName());
+		tbRow.add(b.getTitle());
+		tbRow.add(b.getPrice());
+		tbRow.add(amount);
+		tbRow.add(total);
+		tbContent.add(tbRow);
+		getTotalBill();
+		dtm.setDataVector(tbContent, tbHeader);
+		JTableBill.setModel(dtm);
+	}
+	
+	public void addToBill(int customerId, int bookId, String amountString) {
+		try {					
+			if (!checkAnonymous.isSelected() && customerId == -1)
 				throw new Exception("Please fetch customer's infor.");
 			
-			if (b.getId() == -1) 
+			if (bookId == -1)
 				throw new Exception("Please fetch book's infor.");
 			
-			else {
-				String amountString = txtAmount.getText();
-				
-				if (amountString.trim().equals(""))
-					throw new Exception("Amount can't be blank.");
-				
-				int amount = -1;
-				try {
-					amount = Integer.parseInt(amountString);
-				} catch (Exception ex) {
-					throw new Exception("Amount must be int type.");
-				}
-			
-				if (amount > b.getQuantity()) 
-					throw new Exception("There are not enough books. Only has " + b.getQuantity() + " left.");
-				
-				else {
-					boolean checkExist = false;
-					for (int i = 0; i < tbBooksAdded.size(); i++) {
-						BillDetail bd = (BillDetail) tbBooksAdded.get(i);
-						if (bd.getBookId() == (b.getId()))
-							checkExist = true;
-					}
-										
-					if (checkExist)
-						throw new Exception("This book has already existed in the bill.");
-										
-					else {
-						checkAnonymous.setEnabled(false);
-						
-						totalAmount += amount;
-																		
-						double total = b.getPrice() * amount;
-						
-						tbBooksAdded.add(new BillDetail(b.getId(), amount));
-						Vector tbRow = new Vector();
-						tbRow.add(ct.getName() == null ? "Anonymous" : ct.getName());
-						tbRow.add(b.getTitle());
-						tbRow.add(b.getPrice());
-						tbRow.add(amount);
-						tbRow.add(total);
-						tbContent.add(tbRow);
-						getTotalBill();
-						dtm.setDataVector(tbContent, tbHeader);
-						JTableBill.setModel(dtm);
-					}
-				}
+			if (amountString.trim().equals(""))
+				throw new Exception("Amount can't be blank.");
 
+			int amount = -1;
+			try {
+				amount = Integer.parseInt(amountString);
+			} catch (Exception ex) {
+				throw new Exception("Amount must be int type.");
 			}
-		}
-		catch (Exception ex) {
+			
+			if (amount < 1)
+				throw new Exception("Amount must be greater than 0.");
+			
+			if (amount > b.getQuantity())
+				throw new Exception("There are not enough books. Only has " + b.getQuantity() + " left.");
+
+			boolean checkExist = false;
+			for (int i = 0; i < tbBooksAdded.size(); i++) {
+				BillDetail bd = (BillDetail) tbBooksAdded.get(i);
+				if (bd.getBookId() == (b.getId()))
+					checkExist = true;
+			}
+
+			if (checkExist)
+				throw new Exception("This book has already existed in the bill.");
+
+			addBookToBillTable(customerId, bookId, amount);
+		} catch (Exception ex) {
 			showErrorMessage(ex.getMessage(), "Added to bill fail");
 		}
 	}
@@ -402,6 +399,9 @@ public class GUI_Pay extends JFrame {
 				} catch (Exception e) {
 					throw new Exception("Invalid amount type.");
 				}
+				
+				if (amount < 1)
+					throw new Exception("Amount must be greater than 0.");
 				
 				if (amount > b.getQuantity()) 
 					throw new Exception("There are not enough books "+ b.getTitle() +". Only has " + b.getQuantity() + " left.");
@@ -905,9 +905,9 @@ public class GUI_Pay extends JFrame {
 		lblRemain.setBounds(581, 128, 53, 14);
 		panel_2_1.add(lblRemain);
 		
-		Button btnAddBill = new Button("Add to bill");
-		btnAddBill.setBounds(230, 393, 87, 33);
-		panel_1.add(btnAddBill);
+		Button btnAddToBill = new Button("Add to bill");
+		btnAddToBill.setBounds(230, 393, 87, 33);
+		panel_1.add(btnAddToBill);
 		
 		Button btnDeleteBill = new Button("Delete from bill");
 		btnDeleteBill.setBounds(632, 393, 111, 33);
@@ -1026,12 +1026,16 @@ public class GUI_Pay extends JFrame {
 			}
 		});
 		
-		btnAddBill.addActionListener(new ActionListener() {
+		btnAddToBill.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				addToBill();
+				int customerId = ct.getId();
+				int bookId = b.getId();
+				String amountString = txtAmount.getText();
+
+				addToBill(customerId, bookId, amountString);
 			}
 		});
-		
+
 		btnUpdateBill.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				updateBill();
@@ -1046,13 +1050,21 @@ public class GUI_Pay extends JFrame {
 		
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int result = JOptionPane.showConfirmDialog(frame,"Delete all in this bill?", 
-						"Are you sure?",
-			             JOptionPane.YES_NO_OPTION,
-			             JOptionPane.QUESTION_MESSAGE);
-			    if(result == JOptionPane.YES_OPTION){
-			    	clearInforInput();
-			    }
+				try {
+					if (tbBooksAdded.size() == 0) 
+						throw new Exception("There's nothing in bill to delete.");
+					
+					int result = JOptionPane.showConfirmDialog(frame,"Delete all books in this bill?", 
+							"Are you sure?",
+				             JOptionPane.YES_NO_OPTION,
+				             JOptionPane.QUESTION_MESSAGE);
+				    if(result == JOptionPane.YES_OPTION){
+				    	clearInforInput();
+				    }
+				}
+				catch (Exception ex) {
+					showErrorMessage(ex.getMessage(), "Delete fail");
+				}
 			}
 		});
 		

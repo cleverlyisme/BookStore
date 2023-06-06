@@ -317,11 +317,9 @@ public class GUI_BillStatistic extends JFrame {
 			    day = date.substring(8, 10);
 			    checkDate(txtDateSearch.getValue().toString());
 			}
-			
-			if (errors.size() > 0) throw new Exception();
 		}
 		catch (Exception ex) {
-			throw new Exception();
+			throw new Exception(ex.getMessage());
 		}
 						
 		ArrayList<Bill> lsbill = pb.getBillsBy(year, month, day);
@@ -648,20 +646,16 @@ public class GUI_BillStatistic extends JFrame {
 		btnAnalysis.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					if (txtDateSearch.getText().toString().indexOf('#') != -1) {
-						errors.add("Search field is not full filled.");
-						throw new Exception();
-					}
-					
+					String date = txtDateSearch.getText().toString();
+					if (date.indexOf('#') != -1) 
+						throw new Exception("Search field is not full filled.");
+
 					searchByDate();
-					
-					if (errors.size() > 0) throw new Exception();
 				}
 				catch(Exception ex) {
-					showErrorMessage(String.join("\n", errors), "Find fail");
+					showErrorMessage(ex.getMessage(), "Find fail");
 					getAllBills();
 					txtDateSearch.setValue(null);
-					errors = new ArrayList<>();
 				}
 			}
 		});

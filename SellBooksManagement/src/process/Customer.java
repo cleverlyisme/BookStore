@@ -74,6 +74,11 @@ public class Customer {
 		this.rank = rank;
 	}
 	
+	public Customer(int id) {
+		this.id = id;
+	}
+
+	
 	public Customer() {
 		super();
 	}

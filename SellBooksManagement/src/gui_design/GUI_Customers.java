@@ -186,30 +186,30 @@ public class GUI_Customers extends JFrame {
         return matcher.matches();
     }
 	
-	public void checkInputValues(String name, String phone, String email, String birth) {
+	public void checkInputValues(String name, String phone, String email, String birth) throws Exception {
 		String pattern = "(?i)^(03|05|07|08).*";
 		
-		if (name.equals("") || phone.equals("") || email.equals("")) {					
-			errors.add("Input fields can't be blank.");	
-		}
+		if (name.equals("") || phone.equals("") || email.equals(""))			
+			throw new Exception("Input fields can't be blank.");	
 		
-		if (name.length() < 3 || name.length() > 25) errors.add("Invalid name's length.");	
+		if (name.length() < 3 || name.length() > 25) 
+			throw new Exception("Invalid name's length.");	
 		
-		if (!isValidEmail(email)) errors.add("Invalid email.");
+		if (!isValidEmail(email)) throw new Exception("Invalid email.");
 		
-		if (birth.indexOf('#') != -1) errors.add("Invalid birthday.");
+		if (birth.indexOf('#') != -1) throw new Exception("Invalid birthday.");
 		
 		if (!phone.matches(pattern)) 
-			errors.add("Phone must start at 03, 05, 07, 08, 09."); 
+			throw new Exception("Phone must start at 03, 05, 07, 08, 09."); 
 		
 		try {
 			int checkPhone = Integer.parseInt(phone);
 		}
 		catch (Exception ex) {
-			errors.add("Phone must be numbers.");
+			throw new Exception("Phone must be numbers.");
 		}
 								
-		if (phone.length() != 10) errors.add("Phone's length must be 10.");
+		if (phone.length() != 10) throw new Exception("Phone's length must be 10.");
 		
 		checkDate(birth);
 	}
@@ -374,6 +374,12 @@ public class GUI_Customers extends JFrame {
 						
 						checkInputValues(name, phone, email, birth);
 						
+						for (int i=0; i<tbContent.size(); i++) {
+							Vector data = (Vector) tbContent.get(i);
+							if (name.equals((String) data.get(2)) || email.equals((String) data.get(3))) 
+								throw new Exception("Phone or email existed.");
+						}
+						
 						Date birthday = Date.valueOf(birth);
 													
 						pc.insertCustomer(name, phone, email, birthday);
@@ -384,23 +390,8 @@ public class GUI_Customers extends JFrame {
 						clearInforInput();
 					}
 				}
-				catch (SQLException ex) {
-					int result = JOptionPane.showConfirmDialog(frame,"Add failed. "
-				+ex.getMessage()+" Try again?", 
-							"Are you sure?",
-				             JOptionPane.YES_NO_OPTION,
-				             JOptionPane.ERROR_MESSAGE);
-				    if(result == JOptionPane.NO_OPTION){
-				    	btnUpdate.setEnabled(true);
-						btnDelete.setEnabled(true);
-						btnAdd.setText("Add");
-						clearInforInput();
-				    } else txtBirth.setValue(null);
-					errors = new ArrayList<>();
-				}
 				catch (Exception ex) {
-					int result = JOptionPane.showConfirmDialog(frame,ex.getMessage()+" Try again?", 
-							"Added fail",
+					int result = JOptionPane.showConfirmDialog(frame, ex.getMessage()+" Try again?",  "Added fail",
 				             JOptionPane.YES_NO_OPTION,
 				             JOptionPane.ERROR_MESSAGE);
 				    if(result == JOptionPane.NO_OPTION){
@@ -416,10 +407,8 @@ public class GUI_Customers extends JFrame {
 		btnUpdate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					if (c.getId() == -1) {
-						errors.add("Please select customer you want to update");
-						throw new Exception();
-					}
+					if (c.getId() == -1) 
+						throw new Exception("Please select customer you want to update");
 		
 					String name = txtName.getText();
 					String phone = txtPhone.getText();
@@ -427,6 +416,12 @@ public class GUI_Customers extends JFrame {
 					String birth = txtBirth.getText();
 					
 					checkInputValues(name, phone, email, birth);
+					
+					for (int i=0; i<tbContent.size(); i++) {
+						Vector data = (Vector) tbContent.get(i);
+						if (name.equals((String) data.get(2)) || email.equals((String) data.get(3))) 
+							throw new Exception("Phone or email existed.");
+					}
 					
 					Date birthday = Date.valueOf(birth);
 												

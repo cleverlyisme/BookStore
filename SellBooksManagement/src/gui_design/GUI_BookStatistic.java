@@ -389,17 +389,16 @@ public class GUI_BookStatistic extends JFrame {
 				try {
 					String name = txtNameSearch.getText().toString();
 					
-					if (name.equals("")) {
-						errors.add("Search field must not be empty.");
-						throw new Exception();
-					}
+					if (name.length() < 3 || name.length() > 50)  
+						throw new Exception("Name's length must >3 and <50.");
 					
+					if (name.contains("  "))
+						throw new Exception("Name can't have two consecutive space letters.");
+
 					getAllBooksByName(name);
-										
-					if (errors.size() > 0) throw new Exception();
 				}
 				catch(Exception ex) {
-					showErrorMessage(String.join("\n", errors), "Find fail");
+					showErrorMessage(ex.getMessage(), "Find fail");
 					txtNameSearch.setText("");
 					getAllBookStatistic();
 					errors = new ArrayList<>();

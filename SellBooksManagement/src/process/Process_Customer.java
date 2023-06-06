@@ -137,9 +137,9 @@ public class Process_Customer {
 		catch (SQLException e) {
 			if (e.getErrorCode() == 1062) {
 				if (e.getMessage().contains("email")) 
-					throw new SQLException("Email " + email + " already exists.");
+					throw new Exception("Email " + email + " already exists.");
 				if (e.getMessage().contains("phone")) 
-					throw new SQLException("Phone " + phone + " already exists.");
+					throw new Exception("Phone " + phone + " already exists.");
 				throw e;
 			} else {
 				throw e;
@@ -185,6 +185,68 @@ public class Process_Customer {
 		try {
 			PreparedStatement ps = (PreparedStatement) con.prepareStatement(sql);
 			ps.setInt(1, id);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				Customer ct = new Customer();
+				ct.setId(rs.getInt("id"));
+				ct.setName(rs.getString("name"));
+				ct.setPhone(rs.getString("phone"));
+				ct.setEmail(rs.getString("email"));
+				ct.setBirth(rs.getDate("birth"));
+				ct.setBookPurchased(rs.getInt("books_purchased"));
+				ct.setRank(rs.getString("rank"));
+				return ct;
+			}
+		} catch (SQLException e) {
+			return null;
+		} finally { 
+			if(con != null)
+				try {
+					con.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+		}
+		return null;
+	}
+	
+	public Customer getCustomerByPhone(String phone) {
+		Connection con = getCon();
+		String sql = "select * from customers where phone=?";
+		try {
+			PreparedStatement ps = (PreparedStatement) con.prepareStatement(sql);
+			ps.setString(1, phone);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				Customer ct = new Customer();
+				ct.setId(rs.getInt("id"));
+				ct.setName(rs.getString("name"));
+				ct.setPhone(rs.getString("phone"));
+				ct.setEmail(rs.getString("email"));
+				ct.setBirth(rs.getDate("birth"));
+				ct.setBookPurchased(rs.getInt("books_purchased"));
+				ct.setRank(rs.getString("rank"));
+				return ct;
+			}
+		} catch (SQLException e) {
+			return null;
+		} finally { 
+			if(con != null)
+				try {
+					con.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+		}
+		return null;
+	}
+	
+	public Customer getCustomerByEmail(String email) {
+		Connection con = getCon();
+		String sql = "select * from customers where email=?";
+		try {
+			PreparedStatement ps = (PreparedStatement) con.prepareStatement(sql);
+			ps.setString(1, email);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
 				Customer ct = new Customer();
